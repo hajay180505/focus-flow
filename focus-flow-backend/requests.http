@@ -1,22 +1,30 @@
+# mock is set to true by default, userName is mandatory
+# returns mock data
 GET http://127.0.0.1:8000/github/not-a-user
 
 ###
+#also returns mock data
 GET http://127.0.0.1:8000/github/hajay180505
 
 ###
+#mock works with weekly parameter
 GET http://127.0.0.1:8000/github/hajay180505?weekly=true
 
 ###
+#actual request
 GET http://127.0.0.1:8000/github/hajay180505?mock=false
 
 ###
+#actual weekly request
 GET http://127.0.0.1:8000/github/hajay180505?mock=false&weekly=true
 
 ###
+#user DNE, returns 404
 GET http://127.0.0.1:8000/github/no90t-a-user?mock=false
 
 ###
-
+#user DNE, returns 404
 GET http://127.0.0.1:8000/github/no90t-a-user?weekly=true&mock=false
 
 ###
+

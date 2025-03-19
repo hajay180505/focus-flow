@@ -2,6 +2,14 @@ import json
 import requests
 from dotenv import load_dotenv
 import os
+from datetime import datetime
+import time
+
+epoch_time = int(time.time()) #epoch time
+
+current_year = datetime.now().year #get current year
+
+normal_time = datetime.fromtimestamp(epoch_time) #epoch to normal
 
 load_dotenv()
 
@@ -69,9 +77,8 @@ async def getGithubContributions(userName : str, mock: bool = True) -> dict :
   else:
       print(f"HTTP Error: {response.status_code} - {response.text}")
       return {
-         "error" : response.json()["errors"]["type"],
-         "status" : response.status_code
-         
+         "error" : response.json()["errors"][0]["type"],
+         "status" : response.status_code 
       }
 
 def parseGithubData(data : dict, weekly :bool = False) ->dict:
@@ -100,4 +107,54 @@ def parseGithubData(data : dict, weekly :bool = False) ->dict:
         "contributions" : contribs
     }
     
-#    raise NotImplementedError
+def getLeetcodeStreak(userName : str):
+    if userName == "":
+        return {"error" : "Invalid username", "status" : 404}
+    
+    url = "https://leetcode.com/graphql"  
+
+    query = """
+    query userProfileCalendar($username: String!, $year: Int) {
+    matchedUser(username: $username) {
+        userCalendar(year: $year) {
+        activeYears
+        streak
+        totalActiveDays
+        dccBadges {
+            timestamp
+            badge {
+            name
+            icon
+            }
+        }
+        submissionCalendar
+        }
+    }
+    }
+    """
+
+    variables = {
+        "username": userName,
+        "year": datetime.now().year
+    }
+
+    # Make the request
+    response = requests.post(
+        url,
+        json={"query": query, "variables": variables},
+        # headers=headers
+    )
+
+    # Print the response
+    if response.status_code == 200:
+        print(response.json())
+        return response.json()
+    else:
+        print(f"Error {response.status_code}: {response.text}")
+        return  {
+         "error" : response.json()["errors"][0]["message"],
+         "status" : response.status_code 
+         }
+
+def parseLeetcodeData(data : dict, weekly: bool =False) -> dict:
+    raise NotImplementedError("Not implemented yet")

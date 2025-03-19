@@ -26,14 +26,14 @@ async def github_request(userName : str, response : Response, weekly: Optional[b
     return utils.parseGithubData(raw_data, weekly=weekly)
     
 @app.get("/leetcode/{userName}")
-async def leetcode_request(userName : str, response : Response, weekly: Optional[bool] = False):
+async def leetcode_request(userName : str, response : Response):
     
-    raw_data = await utils.getLeetcodeStreak(userName=userName)
+    raw_data = utils.getLeetcodeStreak(userName=userName)
 
     if "error" in raw_data:
         response.status_code = raw_data["status"]
         return {"reason" : raw_data["error"]}
-    return utils.parseGithubData(raw_data, weekly=weekly)
+    return utils.parseLeetcodeData(raw_data)
     
     
     

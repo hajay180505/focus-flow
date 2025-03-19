@@ -27,4 +27,10 @@ GET http://127.0.0.1:8000/github/no90t-a-user?mock=false
 GET http://127.0.0.1:8000/github/no90t-a-user?weekly=true&mock=false
 
 ###
+#actual request
+GET http://127.0.0.1:8000/leetcode/Ajay_180505
+
+###
+#user DNE, returns 404
+GET http://127.0.0.1:8000/leetcode/hajay180505
 

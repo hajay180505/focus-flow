@@ -148,6 +148,11 @@ def getLeetcodeStreak(userName : str):
     # Print the response
     if response.status_code == 200:
         print(response.json())
+        if "errors" in response.json():
+            return {
+                "error" : response.json()["errors"][0]["message"],
+                "status" : 404
+            }
         return response.json()
     else:
         print(f"Error {response.status_code}: {response.text}")
@@ -156,5 +161,7 @@ def getLeetcodeStreak(userName : str):
          "status" : response.status_code 
          }
 
-def parseLeetcodeData(data : dict, weekly: bool =False) -> dict:
-    raise NotImplementedError("Not implemented yet")
+def parseLeetcodeData(data : dict) -> dict:
+    return {
+        "streak" : data["data"]["matchedUser"]["userCalendar"]["streak"]
+    }

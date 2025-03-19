@@ -158,7 +158,7 @@ def getLeetcodeStreak(userName : str):
 
 def parseLeetcodeData(data : dict) -> dict:
     return {
-        "streak" : data["data"]["matchedUser"]["userCalendar"]["streak"]
+        "streak" : data["data"]["matchedUser"]["userCalendar"]["streak"] > 0
     }
     
 def getDuolingoStreak(userName: str) -> dict:

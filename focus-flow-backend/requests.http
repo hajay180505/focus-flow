@@ -1,0 +1,22 @@
+GET http://127.0.0.1:8000/github/not-a-user
+
+###
+GET http://127.0.0.1:8000/github/hajay180505
+
+###
+GET http://127.0.0.1:8000/github/hajay180505?weekly=true
+
+###
+GET http://127.0.0.1:8000/github/hajay180505?mock=false
+
+###
+GET http://127.0.0.1:8000/github/hajay180505?mock=false&weekly=true
+
+###
+GET http://127.0.0.1:8000/github/no90t-a-user?mock=false
+
+###
+
+GET http://127.0.0.1:8000/github/no90t-a-user?weekly=true&mock=false
+
+###

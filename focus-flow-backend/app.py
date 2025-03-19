@@ -34,6 +34,17 @@ async def leetcode_request(userName : str, response : Response):
         response.status_code = raw_data["status"]
         return {"reason" : raw_data["error"]}
     return utils.parseLeetcodeData(raw_data)
+
+
+@app.get("/duolingo/{userName}")
+async def duolingo_request(userName : str, response : Response):
+    
+    raw_data = utils.getDuolingoStreak(userName=userName)
+
+    if "error" in raw_data:
+        response.status_code = raw_data["status"]
+        return {"reason" : raw_data["error"]}
+    return raw_data
     
     
     

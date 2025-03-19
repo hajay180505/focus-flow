@@ -165,3 +165,47 @@ def parseLeetcodeData(data : dict) -> dict:
     return {
         "streak" : data["data"]["matchedUser"]["userCalendar"]["streak"]
     }
+    
+def getDuolingoStreak(userName: str) -> dict:
+    
+    def make_streak_request(userId : str):
+        # url = f"https://www.duolingo.com/2017-06-30/users/{userId}?fields=streaks%7CcurrentCourse" 
+        url = f"https://www.duolingo.com/2017-06-30/users/{userId}?fields=learningLanguage,streak" 
+        response = requests.get(url, headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0",
+        })
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"Error {response.status_code}: {response.text}")
+            return  {
+             "error" : response.json()["errors"][0]["message"],
+             "status" : response.status_code 
+             }    
+    
+    
+    if userName == "":
+        return {"error" : "Invalid username", "status" : 404}
+    
+    
+    url = "https://www.duolingo.com/2017-06-30/users?fields=users%7Bid%7D&username=" + userName  
+  
+    response = requests.get(url, verify=False, headers={
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0",
+    })
+    
+    if response.status_code == 200:
+        data = response.json()
+        if data["users"] == []:
+            return {
+                "error" : "User not found",
+                "status" : 404
+            }
+        return make_streak_request(data["users"][0]["id"])
+    else:
+        
+        print(f"Error {response.status_code}: {response.text}")
+        return  {
+         "error" : response.json()["errors"][0]["message"],
+         "status" : response.status_code 
+         }

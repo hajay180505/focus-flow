@@ -3,13 +3,8 @@ import requests
 from dotenv import load_dotenv
 import os
 from datetime import datetime
-import time
-
-epoch_time = int(time.time()) #epoch time
 
 current_year = datetime.now().year #get current year
-
-normal_time = datetime.fromtimestamp(epoch_time) #epoch to normal
 
 load_dotenv()
 
@@ -170,12 +165,12 @@ def getDuolingoStreak(userName: str) -> dict:
     
     def make_streak_request(userId : str):
         # url = f"https://www.duolingo.com/2017-06-30/users/{userId}?fields=streaks%7CcurrentCourse" 
-        url = f"https://www.duolingo.com/2017-06-30/users/{userId}?fields=learningLanguage,streak" 
+        url = f"https://www.duolingo.com/2017-06-30/users/{userId}?fields=streak,streakData" 
         response = requests.get(url, headers={
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0",
         })
         if response.status_code == 200:
-            return response.json()
+            return response.json()["streakData"]["currentStreak"]["lastExtendedDate"]
         else:
             print(f"Error {response.status_code}: {response.text}")
             return  {
@@ -201,7 +196,12 @@ def getDuolingoStreak(userName: str) -> dict:
                 "error" : "User not found",
                 "status" : 404
             }
-        return make_streak_request(data["users"][0]["id"])
+        return {
+            "streak" : datetime.strptime(make_streak_request(data["users"][0]["id"]), "%Y-%m-%d").date() == datetime.today().date()
+                
+            } 
+        
+    
     else:
         
         print(f"Error {response.status_code}: {response.text}")

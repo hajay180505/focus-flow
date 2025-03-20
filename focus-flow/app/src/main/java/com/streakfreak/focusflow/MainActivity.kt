@@ -2,6 +2,7 @@ package com.streakfreak.focusflow
 
 import android.os.Bundle
 import android.os.Looper
+import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -16,24 +17,56 @@ import io.ktor.http.*
 import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
+    private val API_URL = "http://10.0.2.2:8000/"
 //    private val apiUrl = "http://192.168.1.10:8000/github/hajay180505?mock=false"
-    private val apiUrl = "http://192.168.1.10:8000/duolingo/hajay180505 "
 //    private val apiUrl = "https://jsonplaceholder.typicode.com/posts/1"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        val textView = findViewById<TextView>(R.id.textView)
+    val githubTextView = findViewById<TextView>(R.id.githubTextView)
+    val leetcodeTextView = findViewById<TextView>(R.id.leetcodeTextView)
+    val duolingoTextView = findViewById<TextView>(R.id.duolingoTextView)
 
-        // Use CoroutineScope to make the API request
+    findViewById<Button>(R.id.button).setOnClickListener {
+        githubTextView.text = "Loading..."
+        leetcodeTextView.text = "Loading..."
+        duolingoTextView.text = "Loading..."
+
         CoroutineScope(Dispatchers.IO).launch {
-            val response = makeApiRequest()
+            val response = makeApiRequest(App.GITHUB.value, "hajay180505", "?weekly=true", "mock=true")
             withContext(Dispatchers.Main) {
-                textView.text = response
+                githubTextView.text = response
                 Toast.makeText(this@MainActivity, response, Toast.LENGTH_SHORT).show()
             }
         }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = makeApiRequest(App.LEETCODE.value, "Ajay_180505")
+            withContext(Dispatchers.Main) {
+                leetcodeTextView.text = response
+                Toast.makeText(this@MainActivity, response, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = makeApiRequest(App.GITHUB.value, "hajay180505")
+            withContext(Dispatchers.Main) {
+                duolingoTextView.text = response
+                Toast.makeText(this@MainActivity, response, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    }
+        // Use CoroutineScope to make the API request
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val response = makeApiRequest(App.GITHUB.value, "hajay180505", "?weekly=true")
+//            withContext(Dispatchers.Main) {
+//                textView.text = response
+//                Toast.makeText(this@MainActivity, response, Toast.LENGTH_SHORT).show()
+//            }
+//        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -42,11 +75,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun makeApiRequest(): String {
+    private suspend fun makeApiRequest(app: String, username :String, vararg params : String ): String {
         val client = HttpClient(Android)
         return try {
-            val response: HttpResponse = client.get(apiUrl)
-            println(response.bodyAsText())
+            var requestUrl = "$API_URL$app/$username" + params.joinToString(separator = "&")
+            val response: HttpResponse = client.get(requestUrl)
             response.bodyAsText()
         } catch (e: Exception) {
             "Error: ${e.message}"

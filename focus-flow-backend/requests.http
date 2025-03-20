@@ -36,3 +36,6 @@ GET http://127.0.0.1:8000/leetcode/hajay180505
 
 ###
 GET http://127.0.0.1:8000/duolingo/hajay180505
+
+###
+GET http://127.0.0.1:8000/github/hajay180505?mock=false&weekly=true

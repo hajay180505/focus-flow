@@ -158,7 +158,8 @@ def getLeetcodeStreak(userName : str):
 
 def parseLeetcodeData(data : dict) -> dict:
     return {
-        "streak" : data["data"]["matchedUser"]["userCalendar"]["streak"] > 0
+        "streak" : data["data"]["matchedUser"]["userCalendar"]["streak"] > 0,
+        "days" : len(json.loads(data["data"]["matchedUser"]["userCalendar"]["submissionCalendar"]).keys())
     }
     
 def getDuolingoStreak(userName: str) -> dict:
@@ -169,8 +170,9 @@ def getDuolingoStreak(userName: str) -> dict:
         response = requests.get(url, headers={
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0",
         })
+        # return str(response.json())
         if response.status_code == 200:
-            return response.json()["streakData"]["currentStreak"]["lastExtendedDate"]
+            return response.json()["streakData"]["currentStreak"]["lastExtendedDate"], response.json()["streak"]
         else:
             print(f"Error {response.status_code}: {response.text}")
             return  {
@@ -191,14 +193,15 @@ def getDuolingoStreak(userName: str) -> dict:
     
     if response.status_code == 200:
         data = response.json()
+        param, days = make_streak_request(data["users"][0]["id"])
         if data["users"] == []:
             return {
                 "error" : "User not found",
                 "status" : 404
             }
         return {
-            "streak" : datetime.strptime(make_streak_request(data["users"][0]["id"]), "%Y-%m-%d").date() == datetime.today().date()
-                
+            "streak" : datetime.strptime(param, "%Y-%m-%d").date() == datetime.today().date(),
+            "days" : days
             } 
         
     

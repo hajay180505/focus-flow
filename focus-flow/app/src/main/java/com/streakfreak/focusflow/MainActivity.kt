@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         duolingoTextView.text = "Loading..."
 
         CoroutineScope(Dispatchers.IO).launch {
-            val response = makeApiRequest(App.GITHUB.value, "hajay180505", "?weekly=true", "mock=true")
+            val response = makeApiRequest(App.GITHUB.value, "hajay180505", "?weekly=false", "mock=true")
             withContext(Dispatchers.Main) {
                 githubTextView.text = response
                 Toast.makeText(this@MainActivity, response, Toast.LENGTH_SHORT).show()
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-            val response = makeApiRequest(App.GITHUB.value, "hajay180505")
+            val response = makeApiRequest(App.DUOLINGO.value, "hajay180505")
             withContext(Dispatchers.Main) {
                 duolingoTextView.text = response
                 Toast.makeText(this@MainActivity, response, Toast.LENGTH_SHORT).show()

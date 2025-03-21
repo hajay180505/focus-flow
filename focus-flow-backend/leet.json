@@ -1,0 +1,21 @@
+{
+    "data": {
+        "matchedUser": {
+            "userCalendar": {
+                "activeYears": [
+                    2021,
+                    2023,
+                    2024,
+                    2025
+                ],
+                "streak": 1,
+                "totalActiveDays": 2,
+                "dccBadges": [],
+                "submissionCalendar": {
+                    "1742342400": 1,
+                    "1742515200": 1
+                }
+            }
+        }
+    }
+}

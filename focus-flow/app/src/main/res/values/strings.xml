@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">FocusFlow</string>
+    <string-array name="appNames">
+        <item>GitHub</item>
+        <item>LeetCode</item>
+        <item>Duolingo</item>
+    </string-array>
 </resources>

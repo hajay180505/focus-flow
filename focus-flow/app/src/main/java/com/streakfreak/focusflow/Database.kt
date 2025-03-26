@@ -23,7 +23,7 @@ class Database(context: Context) : SQLiteOpenHelper(context, "streak_freak", nul
     fun addUser(userName: String, app: String): Long {
         return writableDatabase.use {
             val values = ContentValues().apply {
-                put("name", userName)
+                put("username", userName)
                 put("app", app)
             }
             it.insert("UserInfo", null, values)
@@ -64,7 +64,13 @@ class Database(context: Context) : SQLiteOpenHelper(context, "streak_freak", nul
         return rowsDeleted > 0
     }
 
+    fun deleteByApp(appName: String): Boolean {
+        val db = writableDatabase
+        val rowsDeleted = db.delete("UserInfo", "app=?", arrayOf(appName))
+        db.close()
 
+        return rowsDeleted > 0
+    }
 
     fun getUsernamesByApp(db: SQLiteDatabase, appName: String): List<String> {
         val usernames = mutableListOf<String>()
@@ -112,7 +118,7 @@ class Database(context: Context) : SQLiteOpenHelper(context, "streak_freak", nul
 
 data class User(
     val id: Long,
-    val name: String,
+    val username: String,
     val email: String,
     val dob: String
 )

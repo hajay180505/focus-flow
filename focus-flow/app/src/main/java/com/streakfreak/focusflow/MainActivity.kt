@@ -25,7 +25,8 @@ import kotlinx.coroutines.*
 import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
-    private val API_URL = "http://10.0.2.2:8000/"
+//    private val API_URL = "http://10.0.2.2:8000/"
+    private val API_URL = "http://192.168.1.10:8000/"
 //    private val apiUrl = "http://192.168.1.10:8000/github/hajay180505?mock=false"
 //    private val apiUrl = "https://jsonplaceholder.typicode.com/posts/1"
     @SuppressLint("MissingInflatedId")
@@ -34,6 +35,9 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
+    findViewById<Button>(R.id.switchButton).setOnClickListener{
+        startActivity(Intent(this, CleanMainActivity::class.java))
+    }
     val addApp = findViewById<Button>(R.id.addApp)
 
    /* val githubTextView = findViewById<TextView>(R.id.githubTextView)

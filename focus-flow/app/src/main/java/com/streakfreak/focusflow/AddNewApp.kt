@@ -12,7 +12,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class AddNewApp : AppCompatActivity() {
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -25,6 +24,10 @@ class AddNewApp : AppCompatActivity() {
         val addUserButton = findViewById<Button>(R.id.add)
 
         val db = Database(this)
+
+        findViewById<Button>(R.id.back).setOnClickListener{
+            finish()
+        }
 
         addUserButton.setOnClickListener {
             val selectedApp = appSpinner.selectedItem.toString().lowercase()

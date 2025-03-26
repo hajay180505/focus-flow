@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">FocusFlow</string>
+    <string name="no_internet_please_connect_and_reopen">No internet. Please connect and reopen</string>
+    <string name="focus_flow">Focus Flow</string>
+    <string name="app_name_prompt">App Name</string>
+    <string name="add_an_app">Add An App</string>
+    <string name="username">Username</string>
+    <string name="add">Add</string>
+    <string name="back">Back</string>
     <string-array name="appNames">
         <item>GitHub</item>
         <item>LeetCode</item>

@@ -58,7 +58,15 @@ class Database(context: Context) : SQLiteOpenHelper(context, "streak_freak", nul
 
     fun deleteUser(userName: String): Boolean {
         val db = writableDatabase
-        val rowsDeleted = db.delete("UserInfo", "username=?", arrayOf(userName.toString()))
+        val rowsDeleted = db.delete("UserInfo", "username=?", arrayOf(userName))
+        db.close()
+
+        return rowsDeleted > 0
+    }
+
+    fun deleteByUserAndApp(userName: String, app: String): Boolean {
+        val db = writableDatabase
+        val rowsDeleted = db.delete("UserInfo", "username=? and app=?", arrayOf(userName, app))
         db.close()
 
         return rowsDeleted > 0

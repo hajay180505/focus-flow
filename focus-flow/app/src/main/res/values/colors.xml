@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="primary">#6200EE</color> <!-- A purple color -->
-    <color name="textPrimary">#000000</color> <!-- Black -->
-    <color name="textSecondary">#666666</color> <!-- Gray -->
-    <color name="background">#F7F7F7</color> <!-- Light gray -->
-    <color name="primaryColor">#6200EE</color> <!-- Buttons and key highlights -->
-    <color name="secondaryColor">#03DAC6</color> <!-- Accent color (if needed) -->
-    <color name="backgroundColor">#F5F5F5</color> <!-- Light gray background -->
-    <color name="buttonTextColor">#FFFFFF</color> <!-- White text for buttons -->
-    <color name="textColorPrimary">#333333</color> <!-- Dark gray for labels -->
-    <color name="textColorSecondary">#555555</color> <!-- Gray for secondary text -->
-    <color name="dividerColor">#CCCCCC</color> <!-- For separators (if any) -->
-    <color name="alertColor">#FF5252</color> <!-- Red for delete buttons -->
-    <color name="iconTint">#6200EE</color> <!-- Tint for icons -->
-    <color name="softGreen">#66BB6A</color> <!-- A calm, medium green -->
-    <color name="mintGreen">#A5D6A7</color> <!-- Refreshing, light green -->
-    <color name="darkerGreen">#388E3C</color> <!-- A deep forest green -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="primary">#6200EE</color>
+    <color name="textPrimary">#000000</color>
+    <color name="textSecondary">#666666</color>
+    <color name="background">#F7F7F7</color>
+    <color name="primaryColor">#6200EE</color>
+    <color name="secondaryColor">#03DAC6</color>
+    <color name="backgroundColor">#F5F5F5</color>
+    <color name="buttonTextColor">#FFFFFF</color>
+    <color name="textColorPrimary">#333333</color>
+    <color name="textColorSecondary">#555555</color>
+    <color name="dividerColor">#CCCCCC</color>
+    <color name="alertColor">#FF5252</color>
+    <color name="iconTint">#6200EE</color>
+    <color name="softGreen">#66BB6A</color>
+    <color name="mintGreen">#A5D6A7</color>
+    <color name="darkerGreen">#388E3C</color>
 
 </resources>

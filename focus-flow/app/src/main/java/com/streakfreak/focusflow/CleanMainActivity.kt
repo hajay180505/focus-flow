@@ -64,8 +64,6 @@ class CleanMainActivity : AppCompatActivity() {
         swipeRefreshLayout.setOnRefreshListener {
             refetch()
             itemAdapter.notifyDataSetChanged()
-            Toast.makeText(this, "done", Toast.LENGTH_SHORT).show()
-            Snackbar.make(swipeRefreshLayout, itemList.toString(), Snackbar.LENGTH_SHORT).show()
             swipeRefreshLayout.isRefreshing = false
         }
 
@@ -73,6 +71,23 @@ class CleanMainActivity : AppCompatActivity() {
             startActivity(Intent(this, AddNewApp::class.java))
         }
 
+        listView.setOnItemClickListener { _, _, position, _ ->
+            val clickedItem = itemList[position]
+
+            Toast.makeText(
+                this,
+                "Clicked: ${clickedItem.title}",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            // You can also add more complex actions here
+            // For example, open a detail activity
+            // val intent = Intent(this, DetailActivity::class.java).apply {
+            //     putExtra("ITEM_TITLE", clickedItem.title)
+            //     putExtra("ITEM_SUBTITLE", clickedItem.subtitle)
+            // }
+            // startActivity(intent)
+        }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -84,7 +99,6 @@ class CleanMainActivity : AppCompatActivity() {
         val db = Database(this)
         val usernameAppPairs = db.getUsernameAppPairs(db.readableDatabase)
 
-//        /Toast.makeText(this, usernameAppPairs.toString(), Toast.LENGTH_SHORT).show()
         CoroutineScope(Dispatchers.IO).launch {
             val newList = mutableListOf<ListItem>()
             usernameAppPairs.forEach { pair ->
@@ -102,7 +116,7 @@ class CleanMainActivity : AppCompatActivity() {
                                     image = R.drawable.github,
                                     title = "Github",
                                     subtitle = username,
-                                    color = if (streak) ContextCompat.getColor(applicationContext, R.color.darkerGreen)  else Color.RED,
+                                    color = if (streak) R.color.darkerGreen  else R.color.alertColor,
                                     streak = detail
                                 ))
 
@@ -112,7 +126,7 @@ class CleanMainActivity : AppCompatActivity() {
                                     image = R.drawable.code,
                                     title = "Leetcode",
                                     subtitle = username,
-                                    color = if (streak) ContextCompat.getColor(applicationContext, R.color.darkerGreen)  else Color.RED,
+                                    color = if (streak) R.color.darkerGreen  else R.color.alertColor,
                                     streak = detail
                                 ))
                             }
@@ -121,7 +135,7 @@ class CleanMainActivity : AppCompatActivity() {
                                     image = R.drawable.duo,
                                     title = "Duolingo",
                                     subtitle = username,
-                                    color = if (streak) ContextCompat.getColor(applicationContext, R.color.darkerGreen)  else Color.RED,
+                                    color = if (streak) R.color.darkerGreen  else R.color.alertColor,
                                     streak = detail
                                 ))
                             }
@@ -132,7 +146,7 @@ class CleanMainActivity : AppCompatActivity() {
             itemList.clear()
             itemList.addAll(newList)
         }
-        Toast.makeText(this, itemList.toString(), Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "items: "+ itemList.toString(), Toast.LENGTH_SHORT).show()
     }
 
     private fun polulateInitialData() {

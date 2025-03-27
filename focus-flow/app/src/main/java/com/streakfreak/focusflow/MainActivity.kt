@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
                                 githubDeleteButton.visibility = Button.VISIBLE
                                 githubValue.text = "Contributions: $detail"
                                 githubValue.setTextColor(
-                                    if (streak) ContextCompat.getColor(applicationContext, R.color.darkerGreen)
+                                    if (streak)  R.color.darkerGreen
                                     else Color.RED
                                 )
                             }

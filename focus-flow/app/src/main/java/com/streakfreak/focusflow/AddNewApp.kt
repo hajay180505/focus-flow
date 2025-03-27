@@ -31,6 +31,7 @@ class AddNewApp : AppCompatActivity() {
 
         addUserButton.setOnClickListener {
             val selectedApp = appSpinner.selectedItem.toString().lowercase()
+            Toast.makeText(this, "selected app = $selectedApp", Toast.LENGTH_SHORT).show()
             val enteredUsername = usernameEditText.text.toString().trim()
 
             if (enteredUsername.isNotEmpty()) {

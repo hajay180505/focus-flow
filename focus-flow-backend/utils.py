@@ -193,7 +193,13 @@ def getDuolingoStreak(userName: str) -> dict:
     
     if response.status_code == 200:
         data = response.json()
+        if data["users"] == []:
+            return {
+                "error" : "User not found",
+                "status" : 404
+            }
         param, days = make_streak_request(data["users"][0]["id"])
+        print(f"{data}")
         if data["users"] == []:
             return {
                 "error" : "User not found",

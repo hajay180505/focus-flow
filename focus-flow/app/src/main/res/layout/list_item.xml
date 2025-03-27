@@ -32,23 +32,23 @@
 
         <TextView
             android:id="@+id/itemTitle"
-            android:layout_width="100dp"
-            android:layout_height="26dp"
+            android:layout_width="110dp"
+            android:layout_height="33dp"
             android:text="Duolingo"
             android:textFontWeight="@integer/material_motion_duration_long_2"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
 
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.312"
+            app:layout_constraintHorizontal_bias="0.315"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.175" />
+            app:layout_constraintVertical_bias="0.032" />
 
         <TextView
             android:id="@+id/itemSubtitle"
-            android:layout_width="115dp"
-            android:layout_height="25dp"
+            android:layout_width="124dp"
+            android:layout_height="30dp"
             android:padding="4sp"
             android:text="hajay180505"
             android:textFontWeight="@integer/material_motion_duration_medium_2"

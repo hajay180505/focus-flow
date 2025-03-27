@@ -91,7 +91,14 @@ class MainActivity : AppCompatActivity() {
             usernameAppPairs.forEach { pair ->
                 val app = pair.second.lowercase()
                 val username = pair.first
-                val response = makeApiRequest(app, username)
+                var response : String
+                if(app == "github"){
+                    response = makeApiRequest(app, username, "?mock=false")
+                }
+                else{
+                    response = makeApiRequest(app, username, )
+
+                }
 
                 withContext(Dispatchers.Main) {
                     if (response.isNotEmpty()) {

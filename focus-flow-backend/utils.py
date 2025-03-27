@@ -77,7 +77,7 @@ async def getGithubContributions(userName : str, mock: bool = True) -> dict :
       }
 
 def parseGithubData(data : dict, weekly :bool = False) ->dict:
-
+    print(data)
     if weekly:
         curr_week = data["data"]["user"]["contributionsCollection"]["contributionCalendar"]["weeks"][-1]["contributionDays"]
         streak =  any(

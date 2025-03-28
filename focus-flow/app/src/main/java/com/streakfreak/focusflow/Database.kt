@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.content.ContentValues
+import android.util.Log
 
 class Database(context: Context) : SQLiteOpenHelper(context, "streak_freak", null, 1) {
 
@@ -121,6 +122,63 @@ class Database(context: Context) : SQLiteOpenHelper(context, "streak_freak", nul
         return result
     }
 
+
+// Assuming this is inside your YourDatabaseHelper class
+
+    fun setStreakWithUserNameAndApp(userName: String, app: String, streak: Int) {
+        val db: SQLiteDatabase = writableDatabase
+        try {
+            val values = ContentValues().apply {
+                put("streak", streak.toString()) // Assuming streak column is a TEXT type.  If it's INTEGER, use put("streak", streak)
+                // If your streak column is an integer column, use: put("streak", streak)
+            }
+            //Attempt to update the row. Returns number of rows affected (1 if successful)
+            val rowsUpdated = db.update(
+                "UserInfo",
+                values,
+                "username=? AND app=?",
+                arrayOf(userName, app)
+            )
+
+            if (rowsUpdated > 0) {
+                Log.d("Database", "Streak updated for user '$userName', app '$app': $streak")
+            } else {
+                Log.w("Database", "No matching entry found for user '$userName', app '$app'. Inserting a new row.")
+            }
+
+        } catch (e: Exception) {
+            Log.e("Database", "Error setting streak for user '$userName', app '$app': ${e.message}", e)
+        } finally {
+            db.close()
+        }
+    }
+
+    fun getStreaksForNotification(): List<StreakInfo> {
+        val db = readableDatabase
+        val streaks = mutableListOf<StreakInfo>()
+        try {
+            val cursor = db.query(
+                "UserInfo", // Replace with your table name
+                arrayOf("app", "streak", "username"), // Replace with your actual column names
+                null, null, null, null, null
+            )
+            with(cursor) {
+                while (moveToNext()) {
+                    val app = getString(getColumnIndexOrThrow("app"))
+                    val streak = getString(getColumnIndexOrThrow("streak"))
+                    val userName = getString(getColumnIndexOrThrow("username"))
+                    streaks.add(StreakInfo(app, userName, streak))
+                }
+            }
+            cursor.close()
+        } catch (e: Exception) {
+            Log.e("YourDatabaseHelper", "Error fetching notification data: ${e.message}", e)
+        } finally {
+            db.close()
+        }
+        return streaks
+    }
+
 }
 
 
@@ -130,3 +188,5 @@ data class User(
     val email: String,
     val dob: String
 )
+
+data class StreakInfo(val userName: String, val app: String, val streak : String)

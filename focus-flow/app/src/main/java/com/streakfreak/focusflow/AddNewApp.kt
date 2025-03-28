@@ -64,7 +64,7 @@ class AddNewApp : AppCompatActivity() {
                            isContentSet = false
                            usernameEditText.text.clear()
 
-                           Toast.makeText(this@AddNewApp, "User with $usernameEditText does not exist in $selectedApp", Toast.LENGTH_LONG).show()
+                           Toast.makeText(this@AddNewApp, "User with $enteredUsername does not exist in $selectedApp", Toast.LENGTH_LONG).show()
                        }
                        else{
                              isChecked = true
@@ -98,7 +98,13 @@ class AddNewApp : AppCompatActivity() {
                 val result = db.addUser(enteredUsername, selectedApp)
                 if (result > 0) {
                     Toast.makeText(this, "User added successfully!", Toast.LENGTH_SHORT).show()
-
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val response :Int = makeApiRequestToGetStreak(selectedApp, enteredUsername)
+                        println("response $response")
+                        withContext(Dispatchers.Main) {
+                            db.setStreakWithUserNameAndApp(enteredUsername, selectedApp, response)
+                        }
+                    }
                     finish() // Close the activity after success
                 } else {
                     Toast.makeText(this, "Failed to add user.", Toast.LENGTH_SHORT).show()
@@ -131,23 +137,42 @@ class AddNewApp : AppCompatActivity() {
             client.close()
         }
     }
+    private suspend fun makeApiRequestToGetStreak(app: String, username :String ): Int {
+        val client = HttpClient(Android)
+        return try {
+            var requestUrl = "${App.API_URL.value}$app/$username"
+            println(requestUrl)
+            val response: HttpResponse = client.get(requestUrl)
+            println("Response :"+response.toString())
+            if (response.status.value ==200){
+                parseResponse(response.bodyAsText())
+            }
+            else{
+                0
+            }
+        }
+        catch (e: Exception) {
+            200
+        }
+        finally {
+            client.close()
+        }
+    }
 
-    private fun parseResponse(response: String): Pair<Boolean, String> {
+
+
+    private fun parseResponse(response: String): Int {
         return try {
             val json = JSONObject(response) // Parse the response as JSON
-            Log.d("TAG:","r"+response)
+            Log.d("TAG1:","r"+response)
 
             val streak = json.optBoolean("streak", false) // Extract "streak" (default to false if missing)
-            val detail = when {
-                json.has("contributions") -> json.optString("contributions", "Unknown")
-                json.has("days") -> json.optString("days", "Unknown")
-                else -> "Unknown"
-            }
-            Pair(streak, detail) // Return the parsed streak and detail as a pair
+             // Return the parsed streak and detail as a pair
+            if (streak) 1 else 0
         } catch (e: Exception) {
             println(e)
-
-            Pair(false, "Error parsing response") // Handle parsing errors gracefully
+            0
+// Handle parsing errors gracefully
         }
     }
 }

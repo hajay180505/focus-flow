@@ -142,7 +142,7 @@ def getLeetcodeStreak(userName : str):
 
     # Print the response
     if response.status_code == 200:
-        print(response.json())
+        # print(response.json())
         if "errors" in response.json():
             return {
                 "error" : response.json()["errors"][0]["message"],

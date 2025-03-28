@@ -2,27 +2,22 @@ package com.streakfreak.focusflow
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
+import android.icu.util.TimeUnit
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.ListView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.work.PeriodicWorkRequestBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.request.get
@@ -33,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.time.Duration
 
 class MainActivity : AppCompatActivity() {
 
@@ -49,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
 
 
-        if(! checkForInternet(this)){
+        if(!checkForInternet(this)){
             swipeRefreshLayout.visibility = View.GONE
             Toast.makeText(this, "No internet", Toast.LENGTH_SHORT).show()
             findViewById<ConstraintLayout>(R.id.noInternet).visibility = View.VISIBLE
@@ -96,9 +92,15 @@ class MainActivity : AppCompatActivity() {
                     response = makeApiRequest(app, username, "?mock=false")
                 }
                 else{
-                    response = makeApiRequest(app, username, )
+                    response = makeApiRequest(app, username)
 
                 }
+
+                    val response1 :Int = makeApiRequestToGetStreak(app, username)
+                    Log.d("responsemine",app + " " + username + " " + response1.toString())
+                    withContext(Dispatchers.Main) {
+                        db.setStreakWithUserNameAndApp(username, app,response1)
+                    }
 
                 withContext(Dispatchers.Main) {
                     if (response.isNotEmpty()) {
@@ -153,27 +155,28 @@ class MainActivity : AppCompatActivity() {
             response.bodyAsText()
         }
         catch (e: Exception) {
-//            when{
-//                app == App.DUOLINGO.value ->{
-//                    return "{" +
-//                            "  \"streak\": false," +
-//                            "  \"days\": 1692" +
-//                            "}"
-//                }
-//                app== App.GITHUB.value ->{
-//                    return "{" +
-//                            "  \"streak\": true," +
-//                            "  \"contributions\": 1" +
-//                            "}"
-//                }
-//                app== App.LEETCODE.value ->{
-//                    return "{" +
-//                            "  \"streak\": true," +
-//                            "  \"days\": 2" +
-//                            "}"
-//                }
-            "Error: ${e.message}"
+            when{
+                app == App.DUOLINGO.value ->{
+                    return "{" +
+                            "  \"streak\": false," +
+                            "  \"days\": 1692" +
+                            "}"
+                }
+                app== App.GITHUB.value ->{
+                    return "{" +
+                            "  \"streak\": true," +
+                            "  \"contributions\": 1" +
+                            "}"
+                }
+                app== App.LEETCODE.value ->{
+                    return "{" +
+                            "  \"streak\": true," +
+                            "  \"days\": 2" +
+                            "}"
 
+                }
+                else -> "Error: ${e.message}"
+            }
         }
         finally {
             client.close()
@@ -222,4 +225,44 @@ class MainActivity : AppCompatActivity() {
             else -> false
         }
     }
+
+    private suspend fun makeApiRequestToGetStreak(app: String, username :String ): Int {
+        val client = HttpClient(Android)
+        return try {
+            var requestUrl = "${App.API_URL.value}$app/$username"
+            println(requestUrl)
+            val response: HttpResponse = client.get(requestUrl)
+            println("Response :"+response.toString())
+            if (response.status.value ==200){
+                parseStreakResponse(response.bodyAsText())
+            }
+            else{
+                0
+            }
+        }
+        catch (e: Exception) {
+            200
+        }
+        finally {
+            client.close()
+        }
+    }
+
+
+
+    private fun parseStreakResponse(response: String): Int {
+        return try {
+            val json = JSONObject(response) // Parse the response as JSON
+            Log.d("TAG1:","r"+response)
+
+            val streak = json.optBoolean("streak", false) // Extract "streak" (default to false if missing)
+            // Return the parsed streak and detail as a pair
+            if (streak) 1 else 0
+        } catch (e: Exception) {
+            println(e)
+            0
+// Handle parsing errors gracefully
+        }
+    }
+
 }
